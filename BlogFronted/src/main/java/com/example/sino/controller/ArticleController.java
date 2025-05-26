@@ -1,6 +1,7 @@
 package com.example.sino.controller;
 
 import com.example.domain.entity.Article;
+import com.example.domain.entity.ResponseResult;
 import com.example.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,13 +13,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/article")
-@ComponentScan(basePackages = {"com.example.app", "com.example.service"})
+@ComponentScan(basePackages = {"com.example.service", "com.example.sino.controller"})
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @GetMapping("/text")
+/*    @GetMapping("/text")
     public List<Article> text(){
         return articleService.list();
+    }*/
+    @GetMapping("/hotArticleList")
+    public ResponseResult hotArticleList() {
+    ResponseResult result = articleService.hotArticleLIst();
+    return result;
     }
+
 }

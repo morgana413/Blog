@@ -11,10 +11,8 @@ import com.example.mapper.ArticleMapper;
 import com.example.service.ArticleService;
 
 import com.example.utils.BeanCopyUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -6,4 +6,6 @@ import com.example.domain.entity.User;
 
 public interface BlogLoginService{
     ResponseResult login(User user);
+
+    ResponseResult loginout();
 }

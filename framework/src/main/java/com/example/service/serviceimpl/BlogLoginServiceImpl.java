@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    RedisCache redisCache;
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult login(User user) {
@@ -45,5 +46,17 @@ public class BlogLoginServiceImpl implements BlogLoginService {
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
         BlogUserLoginVo blogUserLoginVo = new BlogUserLoginVo(jwt,userInfoVo);
         return ResponseResult.okResult(blogUserLoginVo);
+    }
+
+    @Override
+    public ResponseResult loginout() {
+        //获取token 解析获取userId
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        //获取userId
+        Long id = loginUser.getUser().getId();
+        //删除redis中的用户信息
+        redisCache.deleteObject("bloglogin:"+id);
+        return ResponseResult.okResult();
     }
 }

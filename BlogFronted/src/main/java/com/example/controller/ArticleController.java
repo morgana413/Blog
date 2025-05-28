@@ -1,4 +1,4 @@
-package com.example.sino.controller;
+package com.example.controller;
 
 import com.example.domain.entity.Article;
 import com.example.domain.entity.ResponseResult;
@@ -18,14 +18,19 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-/*    @GetMapping("/text")
+    @GetMapping("/text")
     public List<Article> text(){
         return articleService.list();
-    }*/
+    }
     @GetMapping("/hotArticleList")
     public ResponseResult hotArticleList() {
     ResponseResult result = articleService.hotArticleLIst();
     return result;
+    }
+
+    @GetMapping("/articleList")
+    public ResponseResult articleList(Integer pageNum,Integer pageSize,Long categoryId) {
+    return articleService.articleList(pageNum,pageSize,categoryId);
     }
 
 }

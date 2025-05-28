@@ -1,4 +1,4 @@
-package com.example.sino.controller;
+package com.example.controller;
 
 import com.example.domain.entity.ResponseResult;
 import com.example.service.CategoryService;

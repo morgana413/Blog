@@ -5,7 +5,7 @@ import com.example.domain.entity.Article;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 @Mapper
 public interface ArticleMapper extends BaseMapper<Article> {
 }

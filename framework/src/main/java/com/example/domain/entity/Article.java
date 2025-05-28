@@ -2,6 +2,10 @@ package com.example.domain.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("sg_article")
 public class Article{
-
+    @TableId
     private Long id;
 //标题
     private String title;
@@ -30,6 +35,9 @@ public class Article{
     private Long viewCount;
 //是否允许评论 1是，0否
     private String isComment;
+
+    @TableField(exist = false)
+    private String categoryName;
 
     private Long createBy;
 

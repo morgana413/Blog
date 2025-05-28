@@ -1,6 +1,8 @@
 package com.example.config;
 
 import com.example.filter.JwtAuthenticationTokenFilter;
+import com.example.handler.security.AccessDeniedHandlerImpl;
+import com.example.handler.security.AuthenticationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,10 @@ public class SecurityConfing extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    private AccessDeniedHandlerImpl accessDeniedHandler;
+    @Autowired
+    private AuthenticationEntryPointImpl authenticationEntryPoint;
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -37,7 +43,9 @@ public class SecurityConfing extends WebSecurityConfigurerAdapter {
                 .antMatchers("/link/getAllLink").authenticated()
                 .anyRequest().permitAll();
 
-
+        http.exceptionHandling()
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler);
         http.logout().disable();
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //允许跨域

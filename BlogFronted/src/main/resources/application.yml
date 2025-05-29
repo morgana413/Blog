@@ -21,3 +21,8 @@ mybatis-plus:
       id-type: auto
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.example.domain.entity
+
+oss:
+  accessKey: vyDtbZMi7HY9VIxMILh-wuj16wSYJ_eW4qpo6vMo
+  secretKey: 2CpvvwB5a86wlQATEcPQcAyapKulYpjDm1pQNflL
+  bucket: sino-blog

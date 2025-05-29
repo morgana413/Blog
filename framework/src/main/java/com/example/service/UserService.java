@@ -1,0 +1,15 @@
+package com.example.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.domain.entity.User;
+
+
+/**
+ * 用户表(User)表服务接口
+ *
+ * @author makejava
+ * @since 2025-05-28 18:33:30
+ */
+public interface UserService extends IService<User> {
+
+}

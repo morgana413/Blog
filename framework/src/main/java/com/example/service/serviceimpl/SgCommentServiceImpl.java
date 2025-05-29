@@ -7,10 +7,13 @@ import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.SgComment;
 import com.example.domain.vo.CommentVo;
 import com.example.domain.vo.PageVo;
+import com.example.enums.AppHttpCodeEnum;
+import com.example.exception.SystemException;
 import com.example.mapper.SgCommentMapper;
 import com.example.service.SgCommentService;
 import com.example.service.UserService;
 import com.example.utils.BeanCopyUtils;
+import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +49,15 @@ public class SgCommentServiceImpl extends ServiceImpl<SgCommentMapper, SgComment
             commentVo.setChildren(children);
         }
         return ResponseResult.okResult(new PageVo(commentVoList,page.getTotal()));
+    }
+
+    @Override
+    public ResponseResult addComment(SgComment sgComment) {
+        if(!Strings.hasText(sgComment.getContent())){
+            throw new SystemException(AppHttpCodeEnum.COMMENT_NOT_NULL);
+        }
+        save(sgComment);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
     private List<CommentVo> toCommentVoList(List<SgComment> sgCommentList) {

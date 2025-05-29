@@ -41,7 +41,7 @@ public class SecurityConfing extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").anonymous()
                 .antMatchers("/logout").authenticated()
                 // 除上面外的所有请求全部不需要认证即可访问
-                .antMatchers("/link/getAllLink").authenticated()
+                //.antMatchers("/link/getAllLink").authenticated() 测试token用
                 .anyRequest().permitAll();
 
         http.exceptionHandling()

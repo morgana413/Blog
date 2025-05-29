@@ -13,7 +13,7 @@ import com.example.domain.entity.SgComment;
  */
 public interface SgCommentService extends IService<SgComment> {
 
-    ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize);
+    ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize);
 
     ResponseResult addComment(SgComment sgComment);
 }

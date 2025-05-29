@@ -16,6 +16,7 @@ import com.example.service.ArticleService;
 
 import com.example.service.CategoryService;
 import com.example.utils.BeanCopyUtils;
+import com.example.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult hotArticleLIst() { //查询热门文章
@@ -91,5 +95,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         //封装响应返回
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+
+        redisCache.incrementCacheMapValue("article",id.toString(),1);
+        return ResponseResult.okResult();
     }
 }

@@ -86,6 +86,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getArticleDetail(Long id) {
         //根据id查询文章
         Article article = getById(id);
+        //从redis中获取文章浏览量
+        Integer viewCount = redisCache.getCacheMapValue("article", id.toString());
+        article.setViewCount(viewCount.longValue());
         //转换成vo
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
         //根据分类id查询分类名

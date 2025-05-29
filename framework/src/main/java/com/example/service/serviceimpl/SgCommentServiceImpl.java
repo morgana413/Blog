@@ -38,6 +38,13 @@ public class SgCommentServiceImpl extends ServiceImpl<SgCommentMapper, SgComment
         page(page,wrapper);
 
         List<CommentVo> commentVoList = toCommentVoList(page.getRecords());
+
+        //查询所有根评论对应的子评论集合
+        for (CommentVo commentVo : commentVoList) {
+            //查询对应的子评论
+            List<CommentVo> children = getChildren(commentVo.getId());
+            commentVo.setChildren(children);
+        }
         return ResponseResult.okResult(new PageVo(commentVoList,page.getTotal()));
     }
 
@@ -52,5 +59,13 @@ public class SgCommentServiceImpl extends ServiceImpl<SgCommentMapper, SgComment
             }
         }
         return commentVos;
+    }
+
+    private List<CommentVo> getChildren(Long id) {
+    LambdaQueryWrapper<SgComment> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(SgComment::getRootId,id);
+    wrapper.orderByAsc(SgComment::getCreateTime);
+    List<SgComment> sgCommentList = list(wrapper);
+        return toCommentVoList(sgCommentList);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.domain.dto.TagDto;
 import com.example.domain.dto.TagListDto;
 import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.Tag;
@@ -15,4 +16,5 @@ import com.example.domain.entity.Tag;
 public interface TagService extends IService<Tag> {
 
     ResponseResult pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+
 }

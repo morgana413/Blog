@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.Role;
 
 import java.util.List;
@@ -15,4 +16,6 @@ import java.util.List;
 public interface RoleService extends IService<Role> {
 
     List<String> selectRoleKeyByUserId(Long id);
+
+    ResponseResult roleList(Integer pageNum, Integer pageSize, Role role);
 }

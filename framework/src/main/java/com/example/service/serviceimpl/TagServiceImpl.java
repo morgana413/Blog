@@ -8,12 +8,17 @@ import com.example.domain.dto.TagListDto;
 import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.Tag;
 import com.example.domain.vo.PageVo;
+import com.example.domain.vo.TagVo;
 import com.example.enums.AppHttpCodeEnum;
 import com.example.exception.SystemException;
 import com.example.mapper.TagMapper;
 import com.example.service.TagService;
+import com.example.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 标签(Tag)表服务实现类
@@ -33,6 +38,15 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         page(page, queryWrapper);
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public List<TagVo> listAllTag() {
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Tag::getId, Tag::getName);
+        List<Tag> list = list(queryWrapper);
+        List<TagVo> tagVoList = BeanCopyUtils.copyBeanList(list, TagVo.class);
+        return tagVoList;
     }
 
 }

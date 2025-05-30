@@ -14,6 +14,7 @@ import com.example.service.LoginService;
 import com.example.service.MenuService;
 import com.example.service.RoleService;
 import com.example.utils.BeanCopyUtils;
+import com.example.utils.RedisCache;
 import com.example.utils.SecurityUtils;
 import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class LoginController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @SystemLog(businessName = "后台登录")
     @PostMapping("/user/login")
@@ -67,5 +71,14 @@ public class LoginController {
         List<Menu> menuList = menuService.selectRouterMenuTreeByUserId(userId);
         //封装数据返回
         return ResponseResult.okResult(new RouterVo(menuList));
+    }
+
+    @PostMapping("/user/logout")
+    public ResponseResult logout(){
+        //获取当前登录的用户ID
+        Long userId = SecurityUtils.getLoginUser().getUser().getId();
+        //删除redis中的用户信息
+        redisCache.deleteObject("login:"+userId);
+        return ResponseResult.okResult();
     }
 }

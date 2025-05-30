@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryVo {
-    private String id;
+    private Long id;
     private String name;
+    private String description;
 }

@@ -3,6 +3,9 @@ package com.example.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.domain.entity.Category;
 import com.example.domain.entity.ResponseResult;
+import com.example.domain.vo.CategoryVo;
+
+import java.util.List;
 
 
 /**
@@ -14,4 +17,6 @@ import com.example.domain.entity.ResponseResult;
 public interface CategoryService extends IService<Category> {
 
     ResponseResult getCategoryList();
+
+    List<CategoryVo> listAllCategory();
 }

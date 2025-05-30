@@ -6,9 +6,7 @@ import com.example.domain.vo.MenuVo;
 import com.example.service.MenuService;
 import com.example.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +24,28 @@ public class MenuControll {
         return ResponseResult.okResult(menuVos);
     }
 
+    @PostMapping("/add")
+    public ResponseResult addMenu(Menu menu){
+        menuService.save(menu);
+        return ResponseResult.okResult();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseResult updateMenu(@PathVariable("id") Menu menu){
+        if (menu.getId().equals(menu.getParentId())){
+        return ResponseResult.errorResult(500,"修改菜单"+menu.getMenuName()+"失败，上级菜单不能选择自己");
+        }
+        menuService.updateById(menu);
+        return ResponseResult.okResult();
+    }
+
+    @DeleteMapping("/{menuId}")
+    public ResponseResult deleteMenu(@PathVariable("menuId") Long menuId){
+        if (menuService.hasChildren(menuId)){
+            return ResponseResult.errorResult(500,"存在子菜单不允许删除");
+        }
+        menuService.removeById(menuId);
+        return ResponseResult.okResult();
+    }
 
 }

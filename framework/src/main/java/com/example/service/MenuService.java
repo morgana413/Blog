@@ -19,4 +19,6 @@ public interface MenuService extends IService<Menu> {
     List<Menu> selectRouterMenuTreeByUserId(long userId);
 
     List<Menu> selectMenuList(Menu menu);
+
+    boolean hasChildren(Long menuId);
 }

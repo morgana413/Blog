@@ -36,4 +36,32 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         //否则返回所具有的权限
         return getBaseMapper().selectPermsByUserId(id);
     }
+
+    @Override
+    public List<Menu> selectRouterMenuTreeByUserId(long userId) {
+        List<Menu> menus;
+        if (userId == 1){
+            menus = getBaseMapper().selectAllRouterMenu();
+        }else {
+            menus = getBaseMapper().selectRouterMenuTreeByUserId(userId);
+        }
+        List<Menu> menuTree = buildMenuTree(menus,0L);
+        return menuTree;
+    }
+
+    private List<Menu> buildMenuTree(List<Menu> menus, long parentId) {
+        List<Menu> menuTree = menus.stream()
+                .filter(menu -> menu.getParentId() == parentId)
+                .map(menu -> menu.setChildren(getChildren(menu,menus)))
+                .collect(Collectors.toList());
+        //先找出第一层菜单 然后找出他们的子菜设置到children属性中
+        return menuTree;
+    }
+
+    private List<Menu> getChildren(Menu menu, List<Menu> menus) {
+        List<Menu> childrenList = menus.stream()
+                .filter(menuItem -> menuItem.getParentId().equals(menu.getId()))
+                .collect(Collectors.toList());
+        return childrenList;
+    }
 }

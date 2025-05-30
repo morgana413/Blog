@@ -2,9 +2,11 @@ package com.controller;
 
 import com.example.annotation.SystemLog;
 import com.example.domain.entity.LoginUser;
+import com.example.domain.entity.Menu;
 import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.User;
 import com.example.domain.vo.AdminUserInfoVo;
+import com.example.domain.vo.RouterVo;
 import com.example.domain.vo.UserInfoVo;
 import com.example.enums.AppHttpCodeEnum;
 import com.example.exception.SystemException;
@@ -57,4 +59,13 @@ public class LoginController {
         return ResponseResult.okResult(adminUserInfoVo);
     }
 
+    @GetMapping("getrouter")
+    public ResponseResult getRouterInfo() {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        long userId = loginUser.getUser().getId();
+        //查询menu
+        List<Menu> menuList = menuService.selectRouterMenuTreeByUserId(userId);
+        //封装数据返回
+        return ResponseResult.okResult(new RouterVo(menuList));
+    }
 }

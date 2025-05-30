@@ -12,4 +12,5 @@ public class SystemConstants {
     public static final String LINK_COMMENT = "1";
     public static final Object MENU = "C";
     public static final Object BUTTON = "F";
+    public static final Object CONTENTS = "C";
 }

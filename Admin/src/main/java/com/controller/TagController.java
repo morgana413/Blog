@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.example.domain.dto.TagListDto;
 import com.example.domain.entity.ResponseResult;
 import com.example.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class TagController {
     private TagService tagService;
 
     @GetMapping("/list")
-    public ResponseResult list(){
-        return ResponseResult.okResult(tagService.list());
+    public ResponseResult list(Integer pageSize, Integer pageNum, TagListDto tagListDto){
+        return tagService.pageTagList(pageNum,pageSize, tagListDto);
     }
 }

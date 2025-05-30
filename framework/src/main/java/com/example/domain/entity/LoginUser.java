@@ -16,6 +16,8 @@ public class LoginUser implements UserDetails {
 
     private User user;
 
+    private List<String> permsList;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

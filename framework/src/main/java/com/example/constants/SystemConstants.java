@@ -14,4 +14,5 @@ public class SystemConstants {
     public static final Object BUTTON = "F";
     public static final Object CONTENTS = "C";
     public static final int CATEGORY_STATUS_NORMAL = 0;
+    public static final String ADMIN = "1";
 }

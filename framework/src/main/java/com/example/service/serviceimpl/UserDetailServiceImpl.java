@@ -1,8 +1,10 @@
 package com.example.service.serviceimpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.constants.SystemConstants;
 import com.example.domain.entity.LoginUser;
 import com.example.domain.entity.User;
+import com.example.mapper.MenuMapper;
 import com.example.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,11 +12,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
+    @Autowired
+    private MenuMapper menuMapper;
     @Autowired
     private UserMapper userMapper;
     @Override
@@ -28,6 +33,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new RuntimeException("用户不存在");
         }
         //返回用户信息
-        return new LoginUser(user);
+        if (user.getStatus().equals(SystemConstants.ADMIN)) {
+            List<String> list = menuMapper.selectPermsByUserId(user.getId());
+            return new LoginUser(user,list);
+        }
+        return new LoginUser(user,null);
     }
 }

@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.constants.SystemConstants;
 import com.example.domain.dto.AddArticleDto;
+import com.example.domain.dto.ArticleDto;
 import com.example.domain.entity.Article;
 import com.example.domain.entity.ArticleTag;
 import com.example.domain.entity.Category;
 import com.example.domain.entity.ResponseResult;
-import com.example.domain.vo.ArticleDetailVo;
-import com.example.domain.vo.ArticleListVo;
-import com.example.domain.vo.HotArticleVo;
-import com.example.domain.vo.PageVo;
+import com.example.domain.vo.*;
 import com.example.mapper.ArticleMapper;
 import com.example.service.ArticleService;
 
@@ -125,5 +123,44 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         articleTagService.saveBatch(articleTags);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public PageVo selectArticlePage(Article article, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
+        queryWrapper.like(Article::getTitle, article.getTitle());
+        queryWrapper.like(Article::getSummary, article.getSummary());
+
+        Page<Article> articlePage = new Page<>(pageNum, pageSize);
+        page(articlePage, queryWrapper);
+
+        List<Article> articleList = articlePage.getRecords();
+        PageVo pageVo = new PageVo(articleList,articlePage.getTotal());
+        return pageVo;
+    }
+
+    @Override
+    public ArticleVo getInfo(Long id) {
+        Article article = getById(id);
+        LambdaQueryWrapper<ArticleTag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ArticleTag::getArticleId, id);
+        List<ArticleTag> articleTags = articleTagService.list(queryWrapper);
+        List<Long> tagIds = articleTags.stream().map(articleTag -> articleTag.getTagId()).collect(Collectors.toList());
+        ArticleVo articleVo = BeanCopyUtils.copyBean(article, ArticleVo.class);
+        articleVo.setTags(tagIds);
+        return articleVo;
+    }
+
+    @Override
+    public void edit(ArticleDto articleDto) {
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        updateById(article);
+        LambdaQueryWrapper<ArticleTag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ArticleTag::getArticleId,article.getId());
+        articleTagService.remove(queryWrapper);
+
+        List<ArticleTag> articleTags = articleDto.getTags().stream().map(tagId -> new ArticleTag(articleDto.getId(),tagId)).collect(Collectors.toList());
+        articleTagService.saveBatch(articleTags);
     }
 }

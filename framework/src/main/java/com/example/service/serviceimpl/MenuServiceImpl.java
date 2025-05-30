@@ -49,6 +49,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menuTree;
     }
 
+    @Override
+    public List<Menu> selectMenuList(Menu menu) {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Menu::getMenuName, menu.getMenuName());
+        queryWrapper.like(Menu::getStatus, menu.getStatus());
+        queryWrapper.orderByAsc(Menu::getId,Menu::getOrderNum);
+        List<Menu> menus = list(queryWrapper);
+        return menus;
+    }
+
     private List<Menu> buildMenuTree(List<Menu> menus, long parentId) {
         List<Menu> menuTree = menus.stream()
                 .filter(menu -> menu.getParentId() == parentId)

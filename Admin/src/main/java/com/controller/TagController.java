@@ -4,6 +4,7 @@ import com.example.domain.dto.TagDto;
 import com.example.domain.dto.TagListDto;
 import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.Tag;
+import com.example.domain.entity.UppdateTagDto;
 import com.example.service.TagService;
 import com.example.utils.BeanCopyUtils;
 import org.apache.ibatis.annotations.Delete;
@@ -32,6 +33,12 @@ public class TagController {
     @DeleteMapping("/{id}")
     public ResponseResult deleteTag(@PathVariable("id") Long id){
         tagService.removeById(id);
+        return ResponseResult.okResult();
+    }
+    @PutMapping()
+    public ResponseResult updateTag(@RequestBody UppdateTagDto tagDto){
+        Tag tag = BeanCopyUtils.copyBean(tagDto, Tag.class);
+        tagService.updateById(tag);
         return ResponseResult.okResult();
     }
 }

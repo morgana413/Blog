@@ -69,7 +69,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Long> selectRouterMenuTreeByRoleId(Long id) {
-        return List.of();
+        return getBaseMapper().selectMenuListByRoleId(id);
     }
 
     private List<Menu> buildMenuTree(List<Menu> menus, long parentId) {

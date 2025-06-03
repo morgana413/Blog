@@ -39,4 +39,15 @@ public class RoleController {
         Role role = roleService.getById(id);
         return ResponseResult.okResult(role);
     }
+
+    @PutMapping
+    private ResponseResult update(@RequestBody Role role) {
+        roleService.updateById(role);
+        return ResponseResult.okResult();
+    }
+    @DeleteMapping("/{id}")
+    private ResponseResult delete(@PathVariable Long id) {
+        roleService.removeById(id);
+        return ResponseResult.okResult();
+    }
 }

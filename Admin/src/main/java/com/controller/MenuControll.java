@@ -2,9 +2,12 @@ package com.controller;
 
 import com.example.domain.entity.Menu;
 import com.example.domain.entity.ResponseResult;
+import com.example.domain.vo.MenuTreeVo;
 import com.example.domain.vo.MenuVo;
+import com.example.domain.vo.RoleMenuSelectVo;
 import com.example.service.MenuService;
 import com.example.utils.BeanCopyUtils;
+import com.example.utils.SystemConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +49,15 @@ public class MenuControll {
         }
         menuService.removeById(menuId);
         return ResponseResult.okResult();
+    }
+
+    @GetMapping("/roleMenuTreeselect/{id}")
+    public ResponseResult roleMenuTreeSelect(@PathVariable("id") Long id){
+        List<Menu> menus = menuService.selectMenuList(new Menu());
+        List<Long> checkedKeys =menuService.selectRouterMenuTreeByRoleId(id);
+        List<MenuTreeVo>menuTreeVos = SystemConverter.buildMenuSelectTree(menus);
+        RoleMenuSelectVo roleMenuSelectVo = new RoleMenuSelectVo(checkedKeys,menuTreeVos);
+        return ResponseResult.okResult(roleMenuSelectVo);
     }
 
 }

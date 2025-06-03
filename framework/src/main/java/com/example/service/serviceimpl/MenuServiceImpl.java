@@ -67,6 +67,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return !menus.isEmpty();
     }
 
+    @Override
+    public List<Long> selectRouterMenuTreeByRoleId(Long id) {
+        return List.of();
+    }
+
     private List<Menu> buildMenuTree(List<Menu> menus, long parentId) {
         List<Menu> menuTree = menus.stream()
                 .filter(menu -> menu.getParentId() == parentId)

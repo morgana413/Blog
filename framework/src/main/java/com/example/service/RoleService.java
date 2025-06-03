@@ -18,4 +18,6 @@ public interface RoleService extends IService<Role> {
     List<String> selectRoleKeyByUserId(Long id);
 
     ResponseResult roleList(Integer pageNum, Integer pageSize, Role role);
+
+    void insertRole(Role role);
 }

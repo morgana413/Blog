@@ -27,4 +27,5 @@ public interface UserService extends IService<User> {
     boolean checkUserMailUnique(String email);
 
     ResponseResult addUser(User user);
+
 }

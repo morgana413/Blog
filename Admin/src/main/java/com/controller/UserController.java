@@ -5,9 +5,12 @@ import com.example.domain.entity.User;
 import com.example.enums.AppHttpCodeEnum;
 import com.example.exception.SystemException;
 import com.example.service.UserService;
+import com.example.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/system/user")
@@ -36,5 +39,14 @@ public class UserController {
             throw new SystemException(AppHttpCodeEnum.EMAIL_EXIST);
         }
         return userService.addUser(user);
+    }
+
+    @DeleteMapping("/{ids}")
+    private ResponseResult deleteUser(@PathVariable List<Long> ids) {
+        if(ids.contains(SecurityUtils.getUserId())){
+            return ResponseResult.errorResult(500,"不能删除当前登录角色");
+        }
+        userService.removeByIds(ids);
+        return ResponseResult.okResult();
     }
 }

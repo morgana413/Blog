@@ -1,10 +1,14 @@
 package com.example.service.serviceimpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.User;
+import com.example.domain.vo.PageVo;
 import com.example.domain.vo.UserInfoVo;
+import com.example.domain.vo.UserVo;
 import com.example.enums.AppHttpCodeEnum;
 import com.example.exception.SystemException;
 import com.example.mapper.UserMapper;
@@ -15,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户表(User)表服务实现类
@@ -82,6 +89,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //存入数据库
         save(user);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult selectUserPage(Integer pageSize, Integer pageNum, User user) {
+        Page<User> page = new Page<>(pageSize,pageNum);
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper();
+        wrapper.like(StringUtils.hasText(user.getUserName()),User::getUserName,user.getUserName());
+        wrapper.eq(StringUtils.hasText(user.getPhonenumber()),User::getPhonenumber,user.getPhonenumber());
+        wrapper.eq(StringUtils.hasText(user.getStatus() ),User::getStatus,user.getStatus());
+        page(page,wrapper);
+        List<User> userList = page.getRecords();
+        List<UserVo> userVos = userList.stream()
+                .map(u -> BeanCopyUtils.copyBean(u, UserVo.class))
+                .collect(Collectors.toList());
+        PageVo pageVo =new PageVo();
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRows(userVos);
+        return ResponseResult.okResult(pageVo);
     }
 
     private boolean userNicknamexist(String nickName) {

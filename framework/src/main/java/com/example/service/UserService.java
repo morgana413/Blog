@@ -14,7 +14,9 @@ import com.example.domain.entity.User;
 public interface UserService extends IService<User> {
     public ResponseResult userInfo();
 
-    ResponseResult updateUserInfo(User user);
+    ResponseResult  updateUserInfo(User user);
 
     ResponseResult register(User user);
+
+    ResponseResult selectUserPage(Integer pageSize, Integer pageNum, User user);
 }

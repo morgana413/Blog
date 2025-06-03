@@ -19,4 +19,12 @@ public interface UserService extends IService<User> {
     ResponseResult register(User user);
 
     ResponseResult selectUserPage(Integer pageSize, Integer pageNum, User user);
+
+    boolean checkUserNameUnique(String userName);
+
+    boolean checkUserPhoneNumUnique(String phonenumber);
+
+    boolean checkUserMailUnique(String email);
+
+    ResponseResult addUser(User user);
 }

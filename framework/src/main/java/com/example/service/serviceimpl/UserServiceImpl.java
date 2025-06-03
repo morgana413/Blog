@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.domain.entity.ResponseResult;
 import com.example.domain.entity.User;
+import com.example.domain.entity.UserRole;
 import com.example.domain.vo.PageVo;
 import com.example.domain.vo.UserInfoVo;
 import com.example.domain.vo.UserVo;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRoleServiceImpl userRoleService;
 
     @Override
     public ResponseResult userInfo() {
@@ -107,6 +113,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         pageVo.setTotal(page.getTotal());
         pageVo.setRows(userVos);
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public boolean checkUserNameUnique(String userName) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUserName,userName);
+        return count(wrapper) == 0;
+    }
+
+    @Override
+    public boolean checkUserPhoneNumUnique(String phonenumber) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getPhonenumber,phonenumber);
+        return count(wrapper) == 0;
+    }
+
+    @Override
+    public boolean checkUserMailUnique(String email) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getEmail,email);
+        return count(wrapper) == 0;
+    }
+
+    @Override
+    public ResponseResult addUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        save(user);
+        if (user.getRoleIds()!=null&&user.getRoleIds().length>0){
+            insertUserRole(user);
+        }
+        return ResponseResult.okResult();
+    }
+
+    private void insertUserRole(User user) {
+        List<UserRole> userRoles = Arrays.stream(user.getRoleIds())
+                .map(roleId-> new UserRole(user.getId(),roleId)).collect(Collectors.toList());
+        userRoleService.saveBatch(userRoles);
     }
 
     private boolean userNicknamexist(String nickName) {

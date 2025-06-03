@@ -52,4 +52,5 @@ public class CategoryContrller {
         categoryService.removeById(id);
         return ResponseResult.okResult();
     }
+
 }

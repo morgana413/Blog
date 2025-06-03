@@ -28,4 +28,5 @@ public interface UserService extends IService<User> {
 
     ResponseResult addUser(User user);
 
+    void updateUser(User user);
 }

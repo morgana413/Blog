@@ -1,9 +1,12 @@
 package com.controller;
 
 import com.example.domain.entity.ResponseResult;
+import com.example.domain.entity.Role;
 import com.example.domain.entity.User;
+import com.example.domain.vo.UserInfoAndRoleIdsVo;
 import com.example.enums.AppHttpCodeEnum;
 import com.example.exception.SystemException;
+import com.example.service.RoleService;
 import com.example.service.UserService;
 import com.example.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
     @GetMapping("/list")
     public ResponseResult getUserList(Integer pageSize, Integer pageNum, User user) {
         return userService.selectUserPage(pageSize,pageNum,user);
@@ -48,5 +53,19 @@ public class UserController {
         }
         userService.removeByIds(ids);
         return ResponseResult.okResult();
+    }
+    @GetMapping("/{id}")
+    public ResponseResult getUserInfoById(@PathVariable Long id) {
+    List<Role> roles = roleService.selectRoleAll();
+    User user = userService.getById(id);
+    List<Long> roleIds = roleService.selectRoleIdByUserId(id);
+        UserInfoAndRoleIdsVo userInfoAndRoleIdsVo = new UserInfoAndRoleIdsVo(user,roles,roleIds);
+        return ResponseResult.okResult(userInfoAndRoleIdsVo);
+    }
+
+    @PutMapping
+    private ResponseResult updateUser(@RequestBody User user) {
+    userService.updateUser(user);
+    return ResponseResult.okResult();
     }
 }

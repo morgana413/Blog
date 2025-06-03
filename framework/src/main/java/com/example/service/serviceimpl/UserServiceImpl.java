@@ -146,6 +146,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return ResponseResult.okResult();
     }
 
+    @Override
+    public void updateUser(User user) {
+    LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(UserRole::getUserId,user.getId());
+    userRoleService.remove(wrapper);
+    insertUserRole(user);
+    updateById(user);
+    }
+
     private void insertUserRole(User user) {
         List<UserRole> userRoles = Arrays.stream(user.getRoleIds())
                 .map(roleId-> new UserRole(user.getId(),roleId)).collect(Collectors.toList());
